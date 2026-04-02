@@ -94,7 +94,7 @@ def live_kml():
 '''
         kml += '''    </Folder>
 
-    <!-- Current Position -->
+    <!-- Current Position - RED BALL (symmetrical) -->
     <Placemark>
       <name>🚀 SE2 Current Position</name>
       <description><![CDATA[<b>LIVE POSITION</b><br>
@@ -103,7 +103,11 @@ Altitude: ''' + f"{alt:.0f}" + ''' ft<br>
 Speed: ''' + f"{speed:.1f}" + ''' knots<br>
 Last updated: ''' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ''']]></description>
       <Style>
-        <IconStyle><scale>1.5</scale><Icon><href>https://maps.google.com/mapfiles/kml/shapes/airports.png</href></Icon></IconStyle>
+        <IconStyle>
+          <scale>1.8</scale>
+          <Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>
+          <color>ffff0000</color>   <!-- bright red ball -->
+        </IconStyle>
       </Style>
       <Point>
         <altitudeMode>absolute</altitudeMode>
