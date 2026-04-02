@@ -130,4 +130,9 @@ Last updated: ''' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ''']]></descr
         return Response(kml, mimetype='application/vnd.google-earth.kml+xml')
 
     except Exception as e:
-        error_kml
+        error_kml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Error</name><description>Failed to fetch API: {str(e)}</description></Document></kml>'''
+        return Response(error_kml, mimetype='application/vnd.google-earth.kml+xml')
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
