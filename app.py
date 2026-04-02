@@ -30,13 +30,13 @@ def live_kml():
         speed = data.get('speed')
         timestamp = data.get('time')
 
-        # Add new point to history
+        # Add new point
         new_point = (lat, lon, alt, speed, timestamp)
         points_history.append(new_point)
         if len(points_history) > 500:
             points_history.pop(0)
 
-        # Build KML with full history
+        # Build full KML
         kml = f'''<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
@@ -48,7 +48,7 @@ def live_kml():
       <LineStyle><color>ff00ffcc</color><width>6</width></LineStyle>
     </Style>
 
-    <!-- Point Style -->
+    <!-- Point Style (base) -->
     <Style id="pointStyle">
       <IconStyle><scale>0.6</scale><Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle>
       <LabelStyle><scale>0</scale></LabelStyle>
@@ -68,6 +68,31 @@ def live_kml():
         kml += '''        </coordinates>
       </LineString>
     </Placemark>
+
+    <!-- Colored Historical Points -->
+    <Folder>
+      <name>Detailed Track Points</name>
+      <open>0</open>
+'''
+        for p in points_history:
+            color = get_kml_color(p[2])
+            kml += f'''      <Placemark>
+        <description><![CDATA[<b>{p[4]}</b><br>Altitude: {p[2]:.0f} ft<br>Speed: {p[3]:.1f} knots]]></description>
+        <styleUrl>#pointStyle</styleUrl>
+        <Style>
+          <IconStyle>
+            <color>{color}</color>
+            <scale>0.6</scale>
+            <Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>
+          </IconStyle>
+        </Style>
+        <Point>
+          <altitudeMode>absolute</altitudeMode>
+          <coordinates>{p[1]},{p[0]},{p[2]*0.3048}</coordinates>
+        </Point>
+      </Placemark>
+'''
+        kml += '''    </Folder>
 
     <!-- Current Position -->
     <Placemark>
@@ -105,9 +130,4 @@ Last updated: ''' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ''']]></descr
         return Response(kml, mimetype='application/vnd.google-earth.kml+xml')
 
     except Exception as e:
-        error_kml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<kml><Document><name>Error</name><description>Failed to fetch API: {str(e)}</description></Document></kml>'''
-        return Response(error_kml, mimetype='application/vnd.google-earth.kml+xml')
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+        error_kml
