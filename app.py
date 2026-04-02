@@ -94,7 +94,7 @@ def live_kml():
 '''
         kml += '''    </Folder>
 
-    <!-- Current Position - RED BALL (symmetrical) -->
+    <!-- Current Position - BRIGHT RED BALL (smaller) -->
     <Placemark>
       <name>🚀 SE2 Current Position</name>
       <description><![CDATA[<b>LIVE POSITION</b><br>
@@ -104,9 +104,9 @@ Speed: ''' + f"{speed:.1f}" + ''' knots<br>
 Last updated: ''' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ''']]></description>
       <Style>
         <IconStyle>
-          <scale>1.8</scale>
+          <scale>0.9</scale>   <!-- 50% smaller than before -->
           <Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>
-          <color>ffff0000</color>   <!-- bright red ball -->
+          <color>ff0000ff</color>   <!-- correct bright red -->
         </IconStyle>
       </Style>
       <Point>
